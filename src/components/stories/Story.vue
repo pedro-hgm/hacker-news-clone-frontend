@@ -1,0 +1,49 @@
+<template>
+  <div>
+    <v-card class="mb-3" flat>
+      <v-card-title>
+        <a :href="story.url" class="my-card-title">{{ story.title }}</a>
+      </v-card-title>
+      <v-card-text>
+        by
+        <a
+          class="news-author"
+          href="#"
+        >{{ story.by }} {{ new Date(story.time * 1000).toLocaleString('pt-BR', { timeZone: 'UTC' }) }}</a>
+      </v-card-text>
+      <p text class="comments-count ml-4">{{ story.descendants || 0 }} Comments</p>
+      <StoryComments v-if="story.descendants > 0" :commentsIds="story.kids" />
+    </v-card>
+  </div>
+</template>
+
+<script>
+import StoryComments from "./StoryComments";
+
+export default {
+  name: "Story",
+  props: ["story"],
+  components: {
+    StoryComments
+  }
+};
+</script>
+
+<style scoped>
+.my-card-title {
+  text-decoration: none;
+  color: #455a64;
+  font-weight: bold;
+}
+.comments-count {
+  font-weight: bold;
+  color: #455a64;
+}
+
+.news-author {
+  color: #455a64;
+}
+.more-comments {
+  color: #ef6c00;
+}
+</style>
