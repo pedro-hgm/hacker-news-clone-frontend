@@ -1,6 +1,6 @@
 <template>
-  <div v-if="comment && !comment.deleted">
-    <div v-show="open ">
+  <div v-if="comment && !comment.deleted && relevantComment">
+    <div class="ml-2" v-show="open">
       <p class="body-2 comment-by">{{ comment.by }} {{ commentTime }}</p>
       <p>
         <span class="body-1 comment-text" v-html="comment.text"></span>
@@ -24,10 +24,15 @@ export default {
   computed: {
     commentTime() {
       return new Date(this.comment.time * 1000).toLocaleString("pt-BR");
+    },
+    relevantComment() {
+      const comment = this.comment.text;
+      return comment.match(/\S+/g).length > 20 ? comment : false;
     }
   },
   methods: {
     async fetchComments() {
+      this.$emit("loading", true);
       try {
         const response = await this.$store.dispatch(
           "fetchStoryComments",
@@ -37,6 +42,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      this.$emit("loading", false);
     },
     getComment() {
       this.comment = this.$store.state.comments[this.id];

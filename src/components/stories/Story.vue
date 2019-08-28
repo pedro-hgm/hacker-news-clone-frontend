@@ -13,9 +13,19 @@
       </v-card-text>
       <p text class="comments-count ml-4">{{ story.descendants || 0 }} Comments</p>
       <v-card-actions>
-        <div v-show="story.descendants > 0">
-          <p @click="open = !open">{{ open ? '- Hide' : '+ Show'}} most relevant comments</p>
-          <StoryComments v-for="id in story.kids" :key="id" :id="id" :open="open" />
+        <div class="ml-3" v-show="story.descendants > 0">
+          <p
+            class="more-comments"
+            @click="open = !open"
+          >{{ open ? '- Hide' : '+ Show'}} most relevant comments</p>
+          <p v-show="loading">loading...</p>
+          <StoryComments
+            v-for="id in story.kids"
+            :key="id"
+            :id="id"
+            :open="open"
+            @loading="setLoading"
+          />
         </div>
       </v-card-actions>
     </v-card>
@@ -33,12 +43,18 @@ export default {
   },
   data() {
     return {
-      open: false
+      open: false,
+      loading: false
     };
   },
   computed: {
     storyTime() {
       return new Date(this.story.time * 1000).toLocaleString("pt-BR");
+    }
+  },
+  methods: {
+    setLoading(payload) {
+      this.loading = payload;
     }
   }
 };

@@ -51,8 +51,8 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    comments(state) {
-      return state.storiesComments;
-    },
+    // comments(state) {
+    //   return state.storiesComments;
+    // },
   },
 });
