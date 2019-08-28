@@ -35,6 +35,11 @@ export default {
     return {
       open: false
     };
+  },
+  computed: {
+    storyTime() {
+      return new Date(this.story.time * 1000).toLocaleString("pt-BR");
+    }
   }
 };
 </script>

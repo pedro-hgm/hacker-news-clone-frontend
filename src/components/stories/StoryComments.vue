@@ -1,14 +1,12 @@
 <template>
-  <div v-if="comment">
-    <div v-show="open">
-      <p
-        class="body-2 comment-by"
-      >{{ comment.by }} {{ new Date(comment.time * 1000).toLocaleString('pt-BR', { timeZone: 'UTC' }) }}</p>
+  <div v-if="comment && !comment.deleted">
+    <div v-show="open ">
+      <p class="body-2 comment-by">{{ comment.by }} {{ commentTime }}</p>
       <p>
         <span class="body-1 comment-text" v-html="comment.text"></span>
       </p>
       <div v-show="comment.kids" class="comment-children">
-        <StoryComments v-for="id in comment.kids" :key="id" :id="id" :open="open" />
+        <StoryComments v-for="id in comment.kids" :key="id" :id="id" :open="open" :nested="true" />
       </div>
     </div>
   </div>
@@ -17,11 +15,16 @@
 <script>
 export default {
   name: "StoryComments",
-  props: ["id", "open"],
+  props: ["id", "open", "nested"],
   data() {
     return {
       comment: null
     };
+  },
+  computed: {
+    commentTime() {
+      return new Date(this.comment.time * 1000).toLocaleString("pt-BR");
+    }
   },
   methods: {
     async fetchComments() {
@@ -40,7 +43,12 @@ export default {
     }
   },
   created() {
-    this.fetchComments();
+    if (this.nested) this.fetchComments();
+  },
+  watch: {
+    open() {
+      if (this.open) this.fetchComments();
+    }
   }
 };
 </script>
