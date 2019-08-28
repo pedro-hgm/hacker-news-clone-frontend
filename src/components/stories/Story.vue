@@ -12,7 +12,11 @@
         >{{ story.by }} {{ new Date(story.time * 1000).toLocaleString('pt-BR', { timeZone: 'UTC' }) }}</a>
       </v-card-text>
       <p text class="comments-count ml-4">{{ story.descendants || 0 }} Comments</p>
+      <!-- <ul> -->
+      <!-- <p @click="open = !open">{{ open ? '- Hide' : '+ Show'}} most relevant comment</p> -->
+      <!-- <comments v-for="id in story.kids" :key="id" :id="id" /> -->
       <StoryComments v-if="story.descendants > 0" :commentsIds="story.kids" />
+      <!-- </ul> -->
     </v-card>
   </div>
 </template>
@@ -25,6 +29,11 @@ export default {
   props: ["story"],
   components: {
     StoryComments
+  },
+  data() {
+    return {
+      open: false
+    };
   }
 };
 </script>

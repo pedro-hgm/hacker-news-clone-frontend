@@ -3,11 +3,12 @@
     <v-expansion-panels accordion>
       <v-expansion-panel>
         <v-expansion-panel-header
+          hide-actions
           class="toggle-comments"
           @click="open = !open"
         >{{ open ? '- Hide' : '+ Show'}} most relevant comments</v-expansion-panel-header>
-        <div v-for="(comment, index) in comments" :key="index">
-          <v-expansion-panel-content>
+        <div>
+          <v-expansion-panel-content v-for="comment in comments" :key="comment.id" eager>
             <p
               class="body-2 comment-by"
             >{{ comment.by }} {{ new Date(comment.time * 1000).toLocaleString('pt-BR', { timeZone: 'UTC' }) }}</p>
@@ -35,25 +36,22 @@ export default {
   },
   computed: {
     comments() {
-      if (!this.open) return;
-      const ids = this.commentsIds;
-      const comments = Array.from(this.$store.getters.comments);
-      const filteredComments = comments.filter(comment => {
-        if (ids.includes(comment.id)) {
-          return comment;
-        }
-      });
-      console.log(filteredComments);
-      return filteredComments;
+      if (this.open) {
+        const ids = this.commentsIds;
+        const comments = [];
+        ids.forEach(id => {
+          comments.push(this.$store.state.comments[id]);
+        });
+        return comments;
+      }
     }
   },
   methods: {
     fetchComments() {
-      if (this.open) return;
       this.$store.dispatch("fetchStoryComments", this.commentsIds);
     }
   },
-  beforeMount() {
+  created() {
     this.fetchComments();
   }
 };

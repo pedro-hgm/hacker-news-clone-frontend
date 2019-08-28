@@ -7,7 +7,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     topStories: [],
-    storiesComments: new Set(),
+    // storiesComments: [],
+    comments: {
+      /* [comment.id: number]: comment */
+    },
   },
   mutations: {
     setTopStories: (state, story) => {
@@ -15,7 +18,7 @@ export default new Vuex.Store({
     },
     setStoryComments: (state, comment) => {
       if (comment === null) return;
-      state.storiesComments.add(comment);
+      state.comments[comment.id] = comment;
     },
   },
   actions: {
