@@ -12,11 +12,12 @@
         >{{ story.by }} {{ new Date(story.time * 1000).toLocaleString('pt-BR', { timeZone: 'UTC' }) }}</a>
       </v-card-text>
       <p text class="comments-count ml-4">{{ story.descendants || 0 }} Comments</p>
-      <!-- <ul> -->
-      <!-- <p @click="open = !open">{{ open ? '- Hide' : '+ Show'}} most relevant comment</p> -->
-      <!-- <comments v-for="id in story.kids" :key="id" :id="id" /> -->
-      <StoryComments v-if="story.descendants > 0" :commentsIds="story.kids" />
-      <!-- </ul> -->
+      <v-card-actions>
+        <div v-show="story.descendants > 0">
+          <p @click="open = !open">{{ open ? '- Hide' : '+ Show'}} most relevant comments</p>
+          <StoryComments v-for="id in story.kids" :key="id" :id="id" :open="open" />
+        </div>
+      </v-card-actions>
     </v-card>
   </div>
 </template>

@@ -40,15 +40,14 @@ export default new Vuex.Store({
         console.log(error);
       }
     },
-    fetchStoryComments: ({ commit }, commentsIds) => {
-      commentsIds.forEach(async (id) => {
-        try {
-          const response = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
-          commit('setStoryComments', response.data);
-        } catch (error) {
-          console.log(error);
-        }
-      });
+    fetchStoryComments: async ({ commit }, id) => {
+      try {
+        const response = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
+        commit('setStoryComments', response.data);
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   getters: {

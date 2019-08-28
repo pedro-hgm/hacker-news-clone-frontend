@@ -1,54 +1,42 @@
 <template>
-  <div>
-    <v-expansion-panels accordion>
-      <v-expansion-panel>
-        <v-expansion-panel-header
-          hide-actions
-          class="toggle-comments"
-          @click="open = !open"
-        >{{ open ? '- Hide' : '+ Show'}} most relevant comments</v-expansion-panel-header>
-        <div>
-          <v-expansion-panel-content v-for="comment in comments" :key="comment.id" eager>
-            <p
-              class="body-2 comment-by"
-            >{{ comment.by }} {{ new Date(comment.time * 1000).toLocaleString('pt-BR', { timeZone: 'UTC' }) }}</p>
-            <p>
-              <span class="body-1 comment-text" v-html="comment.text"></span>
-            </p>
-            <div v-show="comment.kids" class="comment-children">
-              <StoryComments v-for="id in comment.kids" :key="id" :commentsIds="[id]" />
-            </div>
-          </v-expansion-panel-content>
-        </div>
-      </v-expansion-panel>
-    </v-expansion-panels>
+  <div v-if="comment">
+    <div v-show="open">
+      <p
+        class="body-2 comment-by"
+      >{{ comment.by }} {{ new Date(comment.time * 1000).toLocaleString('pt-BR', { timeZone: 'UTC' }) }}</p>
+      <p>
+        <span class="body-1 comment-text" v-html="comment.text"></span>
+      </p>
+      <div v-show="comment.kids" class="comment-children">
+        <StoryComments v-for="id in comment.kids" :key="id" :id="id" :open="open" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "StoryComments",
-  props: ["commentsIds"],
+  props: ["id", "open"],
   data() {
     return {
-      open: false
+      comment: null
     };
   },
-  computed: {
-    comments() {
-      if (this.open) {
-        const ids = this.commentsIds;
-        const comments = [];
-        ids.forEach(id => {
-          comments.push(this.$store.state.comments[id]);
-        });
-        return comments;
-      }
-    }
-  },
   methods: {
-    fetchComments() {
-      this.$store.dispatch("fetchStoryComments", this.commentsIds);
+    async fetchComments() {
+      try {
+        const response = await this.$store.dispatch(
+          "fetchStoryComments",
+          this.id
+        );
+        if (response) this.getComment();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getComment() {
+      this.comment = this.$store.state.comments[this.id];
     }
   },
   created() {
