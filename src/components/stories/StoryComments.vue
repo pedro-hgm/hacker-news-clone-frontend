@@ -60,9 +60,6 @@ export default {
 </script>
 
 <style scoped>
-.toggle-comments {
-  color: #ef6c00;
-}
 .comment-by {
   text-decoration: underline;
   color: #424242;

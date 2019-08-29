@@ -17,8 +17,12 @@
     </v-card>
     <!-- Search End -->
     <v-container>
-      <div class="page-title display-1 font-weigth-bold my-5">Top 15 Hacker News</div>
-      <Story v-for="story in topStories" :key="story.id" :story="story" />
+      <v-row justify="center">
+        <v-col cols="11">
+          <div class="page-title headline font-weight-bold my-5">Top 15 Hacker News</div>
+          <Story v-for="story in topStories" :key="story.id" :story="story" />
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -49,6 +53,6 @@ export default {
 
 <style scoped>
 .page-title {
-  color: #ef6c00;
+  color: #ff6600;
 }
 </style>

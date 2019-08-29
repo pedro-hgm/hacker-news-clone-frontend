@@ -1,15 +1,18 @@
 <template>
   <v-app>
     <div>
-      <v-app-bar color="orange darken-3" flat app>
-        <v-toolbar-title class="headline text-uppercase">
-          <span class="font-weight-bold">Hacker News</span>
+      <v-app-bar color="#ff6600" flat app>
+        <v-toolbar-items class="mt-2 mr-2">
+          <v-img src="./assets/logo.png" height="55" width="36"></v-img>
+        </v-toolbar-items>
+        <v-toolbar-title>
+          <span class="headline font-weight-bold">Hacker News</span>
         </v-toolbar-title>
         <v-spacer></v-spacer>
       </v-app-bar>
     </div>
 
-    <v-content>
+    <v-content class="grey lighten-4">
       <router-view />
     </v-content>
   </v-app>
@@ -17,12 +20,7 @@
 
 <script>
 export default {
-  name: "App",
-  components: {
-    //
-  },
-  data: () => ({
-    //
-  })
+  name: "App"
 };
 </script>
+
