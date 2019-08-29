@@ -21,19 +21,24 @@ export default new Vuex.Store({
       state.comments[comment.id] = comment;
     },
     setSearchedStories: (state, searchedStories) => {
-      const stories = searchedStories.map(story => ({
-        title: story.title,
-        url: story.url || '#',
-        by: story.author,
-        time: story.created_at_i,
-        descendants: story.num_comments,
-        kids: [],
-      }));
+      const stories = searchedStories
+        .filter((story) => {
+          if (!story._tags.includes('ask_hn')) return story;
+        })
+        .map(story => ({
+          title: story.title,
+          url: story.url || '#',
+          by: story.author,
+          time: story.created_at_i,
+          descendants: story.num_comments,
+          kids: [],
+        }));
       state.searchedStories = stories;
     },
   },
   actions: {
     fetchTopStories: async ({ commit }) => {
+      // separar esse metodo em dois, um que pega os ids e outro que pega as topstories
       try {
         const response = await axios.get('https://hacker-news.firebaseio.com/v0/topstories.json');
         const topStoriesIds = response.data.slice(0, 15);
@@ -58,17 +63,22 @@ export default new Vuex.Store({
         return true;
       } catch (error) {
         console.log(error);
+        return false;
       }
     },
     fetchStoriesByQuery: async ({ commit }, query) => {
       try {
         const response = await axios.get(
-          `http://hn.algolia.com/api/v1/search_by_date?query=${query}&tags=story&hitsPerPage=10`,
+          `https://hn.algolia.com/api/v1/search_by_date?query=${query}&tags=story&hitsPerPage=10`,
         );
-        commit('setSearchedStories', response.data.hits);
-        return true;
+        if (response.data.hits.length) {
+          commit('setSearchedStories', response.data.hits);
+          return true;
+        }
+        return false;
       } catch (error) {
         console.log(error);
+        return false;
       }
     },
   },

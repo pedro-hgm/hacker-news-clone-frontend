@@ -18,7 +18,6 @@ import { watch } from "fs";
 
 export default {
   name: "Home",
-  props: ["search"],
   components: {
     Story,
     TheSearch
@@ -47,7 +46,7 @@ export default {
       return this.searchedStories.length
         ? "Top 10 Results For Your Search"
         : "Top 15 Hacker News";
-      // create the logic to handle queries without a result
+      // create the logic to display the comments of the searched term
     }
   },
   created() {

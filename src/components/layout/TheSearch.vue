@@ -37,13 +37,16 @@ export default {
     },
     validateQuery(query) {
       if (!query.length) {
-        this.placeholder = "Can't be blank";
-        setTimeout(() => {
-          this.placeholder = "Search stories";
-        }, 2000);
+        this.feedback("Can't be blank");
         return false;
       }
       return true;
+    },
+    feedback(message) {
+      this.placeholder = message;
+      setTimeout(() => {
+        this.placeholder = "Search stories";
+      }, 2000);
     },
     async fetchStoriesByQuery(query) {
       try {
@@ -51,7 +54,9 @@ export default {
           "fetchStoriesByQuery",
           query
         );
-        if (response) this.$emit("query");
+        response
+          ? this.$emit("query")
+          : this.feedback("Couldn't find any results for your search");
       } catch (error) {
         console.log(error);
       }
