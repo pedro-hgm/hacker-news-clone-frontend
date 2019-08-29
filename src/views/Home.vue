@@ -1,28 +1,11 @@
 <template>
   <div>
-    <!-- Search -->
-    <v-card flat>
-      <v-card-text></v-card-text>
-      <v-card-actions>
-        <v-text-field
-          placeholder="Search stories"
-          outlined
-          solo
-          single-line
-          flat
-          append-icon="mdi-magnify"
-          color="grey"
-        ></v-text-field>
-      </v-card-actions>
-    </v-card>
-    <!-- Search End -->
+    <TheSearch />
     <v-container>
-      <v-row justify="center">
-        <v-col cols="11">
-          <div class="page-title headline font-weight-bold my-5">Top 15 Hacker News</div>
-          <Story v-for="story in topStories" :key="story.id" :story="story" />
-        </v-col>
-      </v-row>
+      <div class="mx-12">
+        <div class="page-title headline font-weight-bold my-5">Top 15 Hacker News</div>
+        <Story v-for="story in topStories" :key="story.id" :story="story" />
+      </div>
     </v-container>
   </div>
 </template>
@@ -30,19 +13,24 @@
 <script>
 import axios from "axios";
 import Story from "../components/stories/Story";
+import TheSearch from "../components/layout/TheSearch";
 
 export default {
   name: "Home",
   components: {
-    Story
+    Story,
+    TheSearch
   },
   data() {
     return {
-      topStoriesIds: [],
-      topStories: this.$store.state.topStories,
-      comments: [],
-      hideComments: true
+      //
     };
+  },
+
+  computed: {
+    topStories() {
+      return this.$store.state.topStories;
+    }
   },
   created() {
     if (this.$store.state.topStories.length === 0)

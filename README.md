@@ -1,5 +1,7 @@
 # hackernews
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7d79157d-c260-44c0-a8c4-08d229764d88/deploy-status)](https://app.netlify.com/sites/hackernewsvue/deploys)
+
 ## Project setup
 ```
 yarn install
