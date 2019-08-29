@@ -67,7 +67,6 @@ export default {
   font-weight: bold;
 }
 .comments-count {
-  /* font-weight: bold; */
   color: #455a64;
 }
 
@@ -77,5 +76,6 @@ export default {
 }
 .more-comments {
   color: #ff6600;
+  cursor: pointer;
 }
 </style>

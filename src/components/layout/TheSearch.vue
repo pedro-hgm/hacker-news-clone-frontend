@@ -3,7 +3,9 @@
     <v-card flat>
       <v-card-text>
         <v-text-field
-          placeholder="Search stories"
+          @keypress.enter="queryStories"
+          v-model="query"
+          :placeholder="placeholder"
           outlined
           solo
           single-line
@@ -19,7 +21,42 @@
 
 <script>
 export default {
-  name: "TheSearch"
+  name: "TheSearch",
+  data() {
+    return {
+      query: "",
+      placeholder: "Search stories"
+    };
+  },
+  methods: {
+    queryStories() {
+      const query = this.query;
+      if (!this.validateQuery(query)) return;
+      this.fetchStoriesByQuery(query);
+      this.query = "";
+    },
+    validateQuery(query) {
+      if (!query.length) {
+        this.placeholder = "Can't be blank";
+        setTimeout(() => {
+          this.placeholder = "Search stories";
+        }, 2000);
+        return false;
+      }
+      return true;
+    },
+    async fetchStoriesByQuery(query) {
+      try {
+        const response = await this.$store.dispatch(
+          "fetchStoriesByQuery",
+          query
+        );
+        if (response) this.$emit("query");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 };
 </script>
 

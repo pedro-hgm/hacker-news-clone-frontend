@@ -7,7 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     topStories: [],
-    // storiesComments: [],
+    searchedStories: [],
     comments: {
       /* [comment.id: number]: comment */
     },
@@ -19,6 +19,17 @@ export default new Vuex.Store({
     setStoryComments: (state, comment) => {
       if (comment === null) return;
       state.comments[comment.id] = comment;
+    },
+    setSearchedStories: (state, searchedStories) => {
+      const stories = searchedStories.map(story => ({
+        title: story.title,
+        url: story.url || '#',
+        by: story.author,
+        time: story.created_at_i,
+        descendants: story.num_comments,
+        kids: [],
+      }));
+      state.searchedStories = stories;
     },
   },
   actions: {
@@ -49,10 +60,19 @@ export default new Vuex.Store({
         console.log(error);
       }
     },
+    fetchStoriesByQuery: async ({ commit }, query) => {
+      try {
+        const response = await axios.get(
+          `http://hn.algolia.com/api/v1/search_by_date?query=${query}&tags=story&hitsPerPage=10`,
+        );
+        commit('setSearchedStories', response.data.hits);
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   getters: {
-    // comments(state) {
-    //   return state.storiesComments;
-    // },
+    //
   },
 });

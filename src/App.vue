@@ -6,7 +6,9 @@
           <v-img src="./assets/logo.png" height="55" width="36"></v-img>
         </v-toolbar-items>
         <v-toolbar-title>
-          <span class="headline font-weight-bold">Hacker News</span>
+          <a href="/" class="page-title">
+            <span class="headline font-weight-bold">Hacker News</span>
+          </a>
         </v-toolbar-title>
         <v-spacer></v-spacer>
       </v-app-bar>
@@ -23,4 +25,11 @@ export default {
   name: "App"
 };
 </script>
+
+<style scoped>
+.page-title {
+  text-decoration: none;
+  color: black;
+}
+</style>
 
