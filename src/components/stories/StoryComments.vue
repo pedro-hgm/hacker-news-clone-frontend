@@ -1,12 +1,15 @@
 <template>
-  <div v-if="comment && !comment.deleted && relevantComment">
-    <div class="ml-2" v-show="open">
-      <p class="body-2 comment-by">{{ comment.by }} {{ commentTime }}</p>
-      <p>
-        <span class="body-1 comment-text" v-html="comment.text"></span>
-      </p>
-      <div v-show="comment.kids" class="comment-children">
-        <StoryComments v-for="id in comment.kids" :key="id" :id="id" :open="open" :nested="true" />
+  <div>
+    <div v-show="!relevantComment">No comments to display</div>
+    <div v-if="comment && !comment.deleted && relevantComment">
+      <div class="ml-2" v-show="open">
+        <p class="body-2 comment-by">{{ comment.by }} {{ commentTime }}</p>
+        <p>
+          <span class="body-1 comment-text" v-html="comment.text"></span>
+        </p>
+        <div v-show="comment.kids" class="comment-children">
+          <StoryComments v-for="id in comment.kids" :key="id" :id="id" :open="open" :nested="true" />
+        </div>
       </div>
     </div>
   </div>

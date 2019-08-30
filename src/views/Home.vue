@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TheSearch @query="getSearchedStories" />
+    <TheSearch @query="setSearchedStories" />
     <v-container>
       <div class="mx-12">
         <div class="page-title headline font-weight-bold my-5">{{ title }}</div>
@@ -28,32 +28,32 @@ export default {
     };
   },
   methods: {
-    getSearchedStories() {
-      const stories = this.$store.state.searchedStories;
-      this.searchedStories = stories;
+    setSearchedStories() {
+      this.searchedStories = this.$store.state.searchedStories;
     },
-    fetchTopStories() {
-      this.$store.dispatch("fetchTopStories");
+    fetchStoriesIds() {
+      const url = "https://hacker-news.firebaseio.com/v0/topstories.json";
+      const search = false;
+      this.$store.dispatch("fetchStoriesIds", { url, search });
     }
   },
   computed: {
     stories() {
       return this.searchedStories.length
         ? this.searchedStories
-        : this.$store.state.topStories;
+        : this.$store.state.stories;
     },
     title() {
       return this.searchedStories.length
         ? "Top 10 Results For Your Search"
         : "Top 15 Hacker News";
-      // create the logic to display the comments of the searched term
     }
   },
   created() {
-    if (this.$store.state.topStories.length === 0) this.fetchTopStories();
+    if (this.$store.state.stories.length === 0) this.fetchStoriesIds();
   },
   watch: {
-    search: "fetchTopStories"
+    search: "fetchStoriesIds"
   }
 };
 </script>
