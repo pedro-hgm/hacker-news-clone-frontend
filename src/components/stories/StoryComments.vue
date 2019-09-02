@@ -3,6 +3,7 @@
     <!-- <div v-show="!relevantComment">No comments to display</div> -->
     <div v-if="comment">
       <div class="ml-2" v-show="open">
+        <hr />
         <p class="body-2 comment-by">{{ comment.author }} {{ comment.date }}</p>
         <p>
           <span class="body-1 comment-text" v-html="comment.text"></span>
@@ -68,5 +69,13 @@ export default {
 }
 .comment-children {
   margin-left: 1.5em;
+}
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
 }
 </style>
