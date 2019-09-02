@@ -1,11 +1,8 @@
 import axios from 'axios';
 
-let baseUrl = '';
-
-process.env.NODE_ENV === 'production'
-  ? (baseUrl = 'https://api-hackersnewsclone.herokuapp.com/')
-  : (baseUrl = 'http://localhost:3000/');
-
-export const HTTP = axios.create({
-  baseUrl,
+export default axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? 'https://api-hackersnewsclone.herokuapp.com/'
+      : 'http://localhost:3000/',
 });

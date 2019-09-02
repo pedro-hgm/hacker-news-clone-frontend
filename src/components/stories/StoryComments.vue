@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <div v-show="!relevantComment">No comments to display</div> -->
     <div v-if="comment">
       <div class="ml-2" v-show="open">
         <hr />
