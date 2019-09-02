@@ -7,20 +7,20 @@
       <v-card-text>
         <p class="ml-2">
           by
-          <span class="story-by">{{ story.by }} {{ storyTime }}</span>
+          <span class="story-by">{{ story.author }} {{ story.date }}</span>
         </p>
         <p
           text
           class="comments-count body-1 font-weight-bold ml-2"
-        >{{ story.descendants || 0 }} Comments</p>
-        <div class="ml-2" v-show="story.descendants > 0">
+        >{{ story.comments_count }} Comments</p>
+        <div class="ml-2" v-show="story.comments.length > 0">
           <p
             class="more-comments body-1"
             @click="open = !open"
           >{{ open ? '- Hide' : '+ Show'}} most relevant comments</p>
           <p v-show="loading">loading...</p>
           <StoryComments
-            v-for="id in story.kids"
+            v-for="id in story.comments"
             :key="id"
             :id="id"
             :open="open"
@@ -46,11 +46,6 @@ export default {
       open: false,
       loading: false
     };
-  },
-  computed: {
-    storyTime() {
-      return new Date(this.story.time * 1000).toLocaleString("pt-BR");
-    }
   },
   methods: {
     setLoading(payload) {
