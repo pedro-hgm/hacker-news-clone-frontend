@@ -11,10 +11,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import Story from "../components/stories/Story";
 import TheSearch from "../components/layout/TheSearch";
-import { watch } from "fs";
 
 export default {
   name: "Home",
@@ -31,10 +29,8 @@ export default {
     setSearchedStories() {
       this.searchedStories = this.$store.state.searchedStories;
     },
-    fetchStoriesIds() {
-      const url = "https://hacker-news.firebaseio.com/v0/topstories.json";
-      const search = false;
-      this.$store.dispatch("fetchStoriesIds", { url, search });
+    fetchStories() {
+      this.$store.dispatch("fetchStoriesIds");
     }
   },
   computed: {
@@ -50,11 +46,8 @@ export default {
     }
   },
   created() {
-    if (this.$store.state.stories.length === 0) this.fetchStoriesIds();
+    if (this.$store.state.stories.length === 0) this.fetchStories();
   },
-  watch: {
-    search: "fetchStoriesIds"
-  }
 };
 </script>
 

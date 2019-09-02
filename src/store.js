@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from 'axios';
-import { async } from 'q';
+import { HTTP } from './http-common';
 
 Vue.use(Vuex);
 
@@ -10,17 +9,12 @@ export default new Vuex.Store({
     stories: [],
     searchedStories: [],
     comments: {
-      /* [comment.id: number]: comment */
+      /* [comment.id: integer]: comment */
     },
-    topStoriesUrl: 'https://hacker-news.firebaseio.com/v0/topstories.json',
   },
   mutations: {
     setStories: (state, { story, search }) => {
-      if (search) {
-        state.searchedStories.push(story);
-      } else {
-        state.stories.push(story);
-      }
+      search ? state.searchedStories.push(story) : state.stories.push(story);
     },
     setStoryComments: (state, comment) => {
       if (comment === null) return;
@@ -28,19 +22,14 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    fetchStoriesIds: async ({ dispatch }, { url, search }) => {
+    fetchStoriesIds: async ({ dispatch }) => {
       try {
-        if (!search) {
-          const response = await axios.get(url);
-          const ids = response.data.slice(0, 15);
-          dispatch('fetchStories', { ids, search });
-        } else {
-          const response = await axios.get(url);
-          if (response.data.hits.length) {
-            const ids = response.data.hits.map(object => parseInt(object.objectID, 10));
-            dispatch('fetchStories', { ids, search });
-          }
-        }
+        const response = await HTTP.get('stories/index');
+        dispatch({
+          type: 'fetchStories',
+          ids: response.data,
+          search: false,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -48,23 +37,32 @@ export default new Vuex.Store({
     fetchStories: ({ commit }, { ids, search }) => {
       ids.forEach(async (id) => {
         try {
-          const stories = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
-          console.log(stories.data);
-          commit('setStories', { story: stories.data, search });
+          const response = await HTTP.get(`stories/show/${id}`);
+          commit('setStories', { story: response.data, search });
         } catch (error) {
           console.log(error);
         }
       });
     },
-    fetchStoriesByQuery: ({ dispatch }, query) => {
-      const url = `https://hn.algolia.com/api/v1/search_by_date?query=${query}&tags=story&hitsPerPage=10`;
-      const search = true;
-      dispatch('fetchStoriesIds', { url, search });
-      return true;
+    fetchStoriesByQuery: async ({ dispatch }, query) => {
+      try {
+        const url = 'stories/search';
+        const response = await HTTP.post(url, { query });
+        dispatch({
+          type: 'fetchStories',
+          ids: response.data,
+          search: true,
+        });
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
     },
     fetchStoryComments: async ({ commit }, id) => {
       try {
-        const response = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
+        const url = `stories/comment/${id}`;
+        const response = await HTTP.get(url);
         commit('setStoryComments', response.data);
         return true;
       } catch (error) {
