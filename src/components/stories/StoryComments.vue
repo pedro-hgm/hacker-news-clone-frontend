@@ -7,7 +7,7 @@
         <p>
           <span class="body-1 comment-text" v-html="comment.text"></span>
         </p>
-        <div v-if="comment.nested" class="comment-children">
+        <div v-if="comment.nested" class="comment-nested">
           <StoryComments
             v-for="id in comment.nested"
             :key="id"
@@ -27,24 +27,33 @@ export default {
   props: ["id", "open", "nested"],
   data() {
     return {
-      comment: null
+      comment: null,
+      valid: true
     };
+  },
+  computed: {
+    shouldFetchComments() {
+      if (!this.comment && this.open && this.valid) return true;
+    }
   },
   methods: {
     async fetchComments() {
       this.$emit("loading", true);
       try {
-        const response = await this.$store.dispatch("fetchStoryComments", [
+        const response = await this.$store.dispatch(
+          "fetchStoryComments",
           this.id
-        ]);
-        if (response) this.getComment();
+        );
+        this.getComment(response);
       } catch (error) {
         console.log(error);
       }
       this.$emit("loading", false);
     },
-    getComment() {
-      this.comment = this.$store.state.comments[this.id];
+    getComment(response) {
+      response
+        ? (this.comment = this.$store.state.comments[this.id])
+        : (this.valid = false);
     }
   },
   created() {
@@ -52,7 +61,7 @@ export default {
   },
   watch: {
     open() {
-      if (this.open) this.fetchComments();
+      if (this.shouldFetchComments) this.fetchComments();
     }
   }
 };
@@ -66,7 +75,7 @@ export default {
 .comment-text {
   color: #424242;
 }
-.comment-children {
+.comment-nested {
   margin-left: 1.5em;
 }
 hr {

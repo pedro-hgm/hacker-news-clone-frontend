@@ -71,9 +71,4 @@ export default new Vuex.Store({
       }
     },
   },
-  getters: {
-    stories(state) {
-      return state.stories;
-    },
-  },
 });
