@@ -54,8 +54,7 @@ export default new Vuex.Store({
           search: true,
         });
         return true;
-      } catch (error) {
-        console.log(error);
+      } catch {
         return false;
       }
     },
@@ -65,8 +64,7 @@ export default new Vuex.Store({
         const response = await HTTP.get(url);
         commit('setStoryComments', response.data);
         return true;
-      } catch (error) {
-        console.log(error);
+      } catch {
         return false;
       }
     },

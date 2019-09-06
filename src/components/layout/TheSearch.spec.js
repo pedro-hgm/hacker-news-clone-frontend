@@ -1,9 +1,16 @@
-import { shallowMount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import TheSearch from './TheSearch.vue';
 
 describe('TheSearch', () => {
-  it('is a Vue instance', () => {
-    const wrapper = shallowMount(TheSearch);
-    expect(wrapper.isVueInstance()).toBeTruthy();
+  const wrapper = mount(TheSearch, {
+    propsData: {
+      query: '',
+      placeholder: 'test',
+    },
+  });
+
+  it('has an input field', () => {
+    const inputField = wrapper.find('v-text-field');
+    expect(inputField.exists()).toBe(true);
   });
 });
