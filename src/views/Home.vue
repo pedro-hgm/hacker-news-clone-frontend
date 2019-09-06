@@ -5,6 +5,13 @@
       <v-row class="mx-10">
         <v-col cols="12">
           <div class="page-title headline font-weight-bold my-5">{{ title }}</div>
+          <Spinner
+            line-fg-color="#ff6600"
+            v-show="!stories.length"
+            size="medium"
+            message="Loading..."
+          ></Spinner>
+
           <Story v-for="story in stories" :key="story.id" :story="story" />
         </v-col>
       </v-row>
@@ -15,12 +22,14 @@
 <script>
 import Story from "../components/stories/Story";
 import TheSearch from "../components/layout/TheSearch";
+import Spinner from "vue-simple-spinner";
 
 export default {
   name: "Home",
   components: {
     Story,
-    TheSearch
+    TheSearch,
+    Spinner
   },
   data() {
     return {

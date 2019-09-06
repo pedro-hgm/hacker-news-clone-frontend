@@ -18,7 +18,7 @@
             class="more-comments body-1"
             @click="open = !open"
           >{{ open ? '- Hide' : '+ Show'}} most relevant comments</p>
-          <p v-show="loading">loading...</p>
+          <Spinner line-fg-color="#ff6600" v-show="loading" size="medium" message="Loading..."></Spinner>
           <StoryComments
             v-for="id in story.comments"
             :key="id"
@@ -34,12 +34,14 @@
 
 <script>
 import StoryComments from "./StoryComments";
+import Spinner from "vue-simple-spinner";
 
 export default {
   name: "Story",
   props: ["story"],
   components: {
-    StoryComments
+    StoryComments,
+    Spinner
   },
   data() {
     return {
