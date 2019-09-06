@@ -1,11 +1,13 @@
 <template>
   <div>
     <TheSearch @query="setSearchedStories" />
-    <v-container>
-      <div class="mx-12">
-        <div class="page-title headline font-weight-bold my-5">{{ title }}</div>
-        <Story v-for="story in stories" :key="story.id" :story="story" />
-      </div>
+    <v-container fluid>
+      <v-row class="mx-10">
+        <v-col cols="12">
+          <div class="page-title headline font-weight-bold my-5">{{ title }}</div>
+          <Story v-for="story in stories" :key="story.id" :story="story" />
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -47,7 +49,7 @@ export default {
   },
   created() {
     if (this.$store.state.stories.length === 0) this.fetchStories();
-  },
+  }
 };
 </script>
 
