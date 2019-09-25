@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="story">
     <v-card class="mb-5" flat>
       <v-card-title>
         <a :href="story.url" class="my-card-title title font-weight-bold ml-2">{{ story.title }}</a>
@@ -35,10 +35,11 @@
 <script>
 import StoryComments from "./StoryComments";
 import Spinner from "vue-simple-spinner";
+import UseCase from "../../../application/useCases/LoadTopStories";
 
 export default {
   name: "Story",
-  props: ["story"],
+  props: ["id"],
   components: {
     StoryComments,
     Spinner
@@ -46,13 +47,21 @@ export default {
   data() {
     return {
       open: false,
-      loading: false
+      loading: false,
+      story: null,
+      useCase: UseCase.build()
     };
   },
   methods: {
+    async fetchStory() {
+      this.story = await this.useCase.execute(this.id);
+    },
     setLoading(payload) {
       this.loading = payload;
     }
+  },
+  created() {
+    this.fetchStory();
   }
 };
 </script>

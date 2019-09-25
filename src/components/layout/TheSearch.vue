@@ -20,12 +20,15 @@
 </template>
 
 <script>
+import UseCase from "../../../application/useCases/searchStories";
+
 export default {
   name: "TheSearch",
   data() {
     return {
       query: "",
-      placeholder: "Search stories"
+      placeholder: "Search stories",
+      useCase: UseCase.build()
     };
   },
   methods: {
@@ -50,12 +53,9 @@ export default {
     },
     async fetchStoriesByQuery(query) {
       try {
-        const response = await this.$store.dispatch(
-          "fetchStoriesByQuery",
-          query
-        );
+        const response = await this.useCase.getStoriesIdsByQuery(query);
         response
-          ? this.$emit("query")
+          ? this.$emit("query", response)
           : this.feedback("Couldn't find any results for your search");
       } catch (error) {
         console.log(error);

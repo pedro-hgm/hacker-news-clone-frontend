@@ -1,18 +1,22 @@
 <template>
   <div>
-    <TheSearch @query="setSearchedStories" />
+    <TheSearch @query="setSearchedStoriesIds" />
     <v-container fluid>
       <v-row class="mx-10">
         <v-col cols="12">
           <div class="page-title headline font-weight-bold my-5">{{ title }}</div>
           <Spinner
             line-fg-color="#ff6600"
-            v-show="!stories.length"
+            v-show="!storiesIds.length"
             size="medium"
             message="Loading..."
           ></Spinner>
-
-          <Story v-for="story in stories" :key="story.id" :story="story" />
+          <div v-if="searchedStoriesIds.length > 0">
+            <Story v-for="id in searchedStoriesIds" :key="id" :id="id" />
+          </div>
+          <div v-else>
+            <Story v-for="id in storiesIds" :key="id" :id="id" />
+          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -23,6 +27,8 @@
 import Story from "../components/stories/Story";
 import TheSearch from "../components/layout/TheSearch";
 import Spinner from "vue-simple-spinner";
+import UseCase from "../../application/useCases/LoadTopStories";
+import UseCase2 from "../../application/useCases/searchStories";
 
 export default {
   name: "Home",
@@ -33,31 +39,34 @@ export default {
   },
   data() {
     return {
-      searchedStories: []
+      searchedStoriesIds: [],
+      storiesIds: [],
+      useCase: UseCase.build(),
+      useCase2: UseCase2.build()
     };
   },
   methods: {
-    setSearchedStories() {
-      this.searchedStories = this.$store.state.searchedStories;
+     setSearchedStoriesIds(ids) {
+      this.searchedStoriesIds = ids;
     },
-    fetchStories() {
-      this.$store.dispatch("fetchStoriesIds");
+    async fetchStories() {
+      this.storiesIds = await this.useCase.topStoriesIds();
     }
   },
   computed: {
     stories() {
-      return this.searchedStories.length
-        ? this.searchedStories
-        : this.$store.state.stories;
+      return this.searchedStoriesIds.length
+        ? this.searchedStoriesIds
+        : this.storiesIds;
     },
     title() {
-      return this.searchedStories.length
+      return this.searchedStoriesIds.length
         ? "Top 10 Results For Your Search"
         : "Top 15 Hacker News";
     }
   },
   created() {
-    if (this.$store.state.stories.length === 0) this.fetchStories();
+    this.fetchStories();
   }
 };
 </script>

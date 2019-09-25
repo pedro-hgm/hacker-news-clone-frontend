@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import useCase from "../../../application/useCases/LoadMostRelevantComment";
 export default {
   name: "StoryComments",
   props: ["id", "open", "nested"],
@@ -32,36 +33,31 @@ export default {
     };
   },
   computed: {
-    shouldFetchComments() {
+    shouldFetchComment() {
       if (!this.comment && this.open && this.valid) return true;
     }
   },
   methods: {
-    async fetchComments() {
+    async fetchComment() {
       this.$emit("loading", true);
       try {
-        const response = await this.$store.dispatch(
-          "fetchStoryComments",
-          this.id
-        );
-        this.getComment(response);
+        const response = await useCase.execute(this.id);
+        this.setComment(response);
       } catch (error) {
         console.log(error);
       }
       this.$emit("loading", false);
     },
-    getComment(response) {
-      response
-        ? (this.comment = this.$store.state.comments[this.id])
-        : (this.valid = false);
+    setComment(comment) {
+      comment ? (this.comment = comment) : (this.valid = false);
     }
   },
   created() {
-    if (this.nested) this.fetchComments();
+    if (this.nested) this.fetchComment();
   },
   watch: {
     open() {
-      if (this.shouldFetchComments) this.fetchComments();
+      if (this.shouldFetchComment) this.fetchComment();
     }
   }
 };
